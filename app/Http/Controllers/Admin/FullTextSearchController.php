@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Model\Post;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Model\FullTextSearch;
 
-class PostController extends Controller
+class FullTextSearchController extends Controller
 {
-    public function __construct()
-    {
-       $this->middleware('can:post.create')->only(['create', 'store']);
-       // $this->middleware('can:post.update,post')->only(['edit', 'update']);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -20,8 +15,15 @@ class PostController extends Controller
      */
     public function index()
     {
-        $items = Post::with('owner')->latest()->paginate(50);
-        return view('posts.index', compact('items'));
+        $items = FullTextSearch::paginate(50);
+        return view('fts.index', compact('items'));
+    }
+
+    public function search(Request $request)
+    {
+        $q = $request->q;
+        $items = FullTextSearch::search($q)->paginate(50);
+        return view('fts.index', compact('items', 'q'));
     }
 
     /**
@@ -31,8 +33,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        dd('create');
-        return view('posts.create');
+        
     }
 
     /**
@@ -43,13 +44,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $post = new Post();
-        $post->title  = $request->title;
-        $post->detail = $request->detail;
-        $post->user_id = Auth::id();
-        $post->picture = 'test.png';
-        $post->save();
-        return redirect()->route('adusers.index');
+        //
     }
 
     /**
@@ -71,11 +66,7 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        $post = Post::findOrFail($id); 
-        $this->authorize('post.update', $post);
-        dd('edit');
-        $roles = Role::all();
-        return view('users.edit', compact('item', 'roles'));
+        //
     }
 
     /**
@@ -87,13 +78,7 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $post = new Post();
-        $post->title  = $request->title;
-        $post->detail = $request->detail;
-        $post->user_id = Auth::id();
-        $post->picture = 'test.png';
-        $post->save();
-        return redirect()->route('adposts.index');
+        //
     }
 
     /**
@@ -104,8 +89,6 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        $post = Post::findOrFail($id);
-        $post->delete();
-        return redirect()->route('adposts.index');
+        //
     }
 }

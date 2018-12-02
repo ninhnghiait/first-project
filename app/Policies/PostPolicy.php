@@ -2,33 +2,24 @@
 
 namespace App\Policies;
 
-use App\Model\Post;
 use App\User;
+use App\Model\Post;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PostPolicy
 {
     use HandlesAuthorization;
 
-     /**
-     * Determine whether the user is superadministrator.
-     *
-     * @param  \App\User  $user
-     * @return mixed
-     */
-    public function before(User $user)
-    {
-        return $user->inRole('superadministrator') ? true : null;
-    }
     /**
      * Determine whether the user can view the post.
      *
      * @param  \App\User  $user
+     * @param  \App\Model\Post  $post
      * @return mixed
      */
-    public function view(User $user)
+    public function view(User $user, Post $post)
     {
-        return $user->hasAccess(['post.view']);
+       // return $user->hasAccess(['post.view']);
     }
 
     /**
@@ -46,31 +37,31 @@ class PostPolicy
      * Determine whether the user can update the post.
      *
      * @param  \App\User  $user
-     * @param  \App\model\Post  $post
+     * @param  \App\Model\Post  $post
      * @return mixed
      */
     public function update(User $user, Post $post)
     {
-        return $user->hasAccess(['post.update']) or $user->id == $post->user_id;;
+        return $user->hasAccess(['post.update']) or $user->id == $post->user_id;
     }
 
     /**
      * Determine whether the user can delete the post.
      *
      * @param  \App\User  $user
-     * @param  \App\model\Post  $post
+     * @param  \App\Model\Post  $post
      * @return mixed
      */
     public function delete(User $user, Post $post)
     {
-        return $user->hasAccess(['post.delete']);
+        //
     }
 
     /**
      * Determine whether the user can restore the post.
      *
      * @param  \App\User  $user
-     * @param  \App\model\Post  $post
+     * @param  \App\Model\Post  $post
      * @return mixed
      */
     public function restore(User $user, Post $post)
@@ -82,17 +73,11 @@ class PostPolicy
      * Determine whether the user can permanently delete the post.
      *
      * @param  \App\User  $user
-     * @param  \App\model\Post  $post
+     * @param  \App\Model\Post  $post
      * @return mixed
      */
     public function forceDelete(User $user, Post $post)
     {
         //
     }
-
-    public function publish(User $user)
-    {
-        return $user->hasAccess(['post.publish']);
-    }
-
 }

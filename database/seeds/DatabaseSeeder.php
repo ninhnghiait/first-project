@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(\RoleTableSeeder::class);
         $this->call(\UsersTableSeeder::class);
         $this->call(\PostTableSeeder::class);
+        $this->call(\FullTextSearchTableSeeder::class);
     }
 }
