@@ -46,13 +46,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user = new Role();
+        $user = new User();
         $user->name  = $request->name;
         $user->email = $request->email;
         $user->password  = Hash::make($request->password);
         $user->save();
         $user->roles()->attach($request->roles);
-        return redirect()->route('adroles.index');
+        return redirect()->route('adusers.index');
     }
 
     /**
@@ -94,7 +94,7 @@ class UserController extends Controller
         if($request->has('password') ) $user->password  = Hash::make($request->password);
         $user->save();
         $user->roles()->sync($request->roles);
-        return redirect()->route('adroles.index');
+        return redirect()->route('adusers.index');
     }
 
     /**
@@ -108,5 +108,25 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
         return redirect()->route('adroles.index');
+    }
+
+    /**
+     * Activity Log
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function activity()
+    {
+        // $user = User::find(2);
+        $role = Role::find(2);
+        activity()->performedOn($role)->log('hello');
+        echo 'done</hr>';
+        $lastActivity = Activity::all()->last();
+        return $lastActivity->subject;
+    }
+    public function allActivity()
+    {
+        $items = Activity::all()->latest();
+        return view('users.activity', compact('items'));
     }
 }

@@ -19,16 +19,25 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::namespace('Admin')->prefix('admin')->middleware('auth')->group(function() {
+	// LARAVEL ACTIVITY LOG
+	Route::get('aduser-activitied', 'UserActivityController@index')->name('aduser-activitied.index');
+
 	Route::resource('adusers', 'UserController');
+
 	Route::resource('adroles', 'RoleController');
+
 	Route::resource('adpermissions', 'PermissionController');
+
 	Route::resource('adposts', 'PostController');
+
 	// FULL TEXT SEARCH
 	Route::get('adfts/search', 'FullTextSearchController@search')->name('adfts.search');
 	Route::resource('adfts', 'FullTextSearchController');
+
 	// LARAVEL QUEUE - Contact
 	Route::get('adcontacts', 'ContactController@index')->name('adcontacts.index');
 	Route::get('adcontacts/create', 'ContactController@create')->name('adcontacts.create');
 	Route::post('adcontacts/store', 'ContactController@store')->name('adcontacts.store');
 	Route::delete('adcontacts/{id}/destroy', 'ContactController@destroy')->name('adcontacts.destroy');
+
 });
