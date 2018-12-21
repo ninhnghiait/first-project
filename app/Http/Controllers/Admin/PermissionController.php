@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\PermissionRequest;
 use App\Model\Permission;
+use App\Traits\RedirectTraits;
 use Illuminate\Http\Request;
 
 class PermissionController extends Controller
 {
+    use RedirectTraits;
+
     public function __construct()
     {
         //$this->middleware('can:user.index')->only('index');
@@ -20,6 +24,7 @@ class PermissionController extends Controller
     public function index()
     {
         $items = Permission::paginate(50);
+        $this->setUrl();
         return view('permissions.index', compact('items'));
     }
 
@@ -63,7 +68,8 @@ class PermissionController extends Controller
      */
     public function edit($id)
     {
-        return view('permissions.edit');
+        $item = Permission::findOrFail($id);
+        return view('permissions.edit', compact('item'));
     }
 
     /**
@@ -73,9 +79,19 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PermissionRequest $request, $id)
     {
-        //
+        $item = Permission::findOrFail($id);
+        $data = $request->only(['display_name', 'description']);
+        if ($item->update($data)) {
+            if ($request->save == 'save') {
+                $url = $this->getUrl(route('adpermissions.index'));
+                return redirect($url)->with('msg', 'Success!');
+            } else {
+                return redirect()->route('adpermissions.edit', $id);
+            }
+        }
+        return redirect()->route('adpermissions.edit', $id)->with('msger', 'Error!');
     }
 
     /**

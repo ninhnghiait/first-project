@@ -10,24 +10,46 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class User extends Authenticatable
 {
     use Notifiable;
-    use LogsActivity;
+    // use LogsActivity;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'first_name', 'last_name', 'avatar'
     ];
+
+    protected $cast = [
+        'name' => 'boolean'
+    ];
+
+
+    /**
+     * Accessor fullname, avatar
+     */
+    protected $appends = ['full_name', 'avatar_user']; 
+
+    public function getFullNameAttribute()
+    {   
+        return $this->first_name.' '.$this->last_name;
+    }
+    public function getAvatarUserAttribute()
+    {
+        return (!is_null($this->avatar) && !empty($this->avatar)) ? $this->avatar : '/photos/1/users/!logged-user.jpg';
+    }
+
     /**
      * The attributes that are activitylog.
      *
      * @var array
      */
-    protected static $logAttributes = [
-        'name', 'email',
-    ];
-    protected static $logOnlyDirty = true;
+    // protected static $logAttributes = [
+    //     'name', 'email',
+    // ];
+
+    // protected static $logOnlyDirty = true;
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -36,11 +58,17 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
     // RELATIONSHIP
+    public function profile()
+    {
+        return $this->hasOne('App\Model\Profile');
+    }
     public function roles()
     {
         return $this->belongsToMany('App\Model\Role', 'role_user');
     }
+    
     // ATHORIZATION
     /**
      * Checks if User has access to $permissions.

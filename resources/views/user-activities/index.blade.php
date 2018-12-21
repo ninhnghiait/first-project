@@ -14,16 +14,22 @@
         @forelse($items as $item)
         @php
             $author = $item->causer;
-            $authorInfo = $author->name;
+            $authorInfo = !is_null($author) ? $author->name : 'Guest';
             $description = $item->description; 
             $subject = $item->subject;
-            $subjectInfo = $subject->name;
+            $subjectInfo = !is_null($subject) ? $subject->name : '';
+            $atributes = $item->getExtraProperty('attributes');
+            $atributesInfo = !empty($atributes) ? implode('/', $atributes).'<br>' : '';
+            $old = $item->getExtraProperty('old');
+            $oldInfo = !empty($old) ? '['.implode('/', $atributes).']' : '';
+            $created_at = $item->created_at->toDateTimeString();
         @endphp
     	<div class="alert alert-success alert-dismissible fade show" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <strong>{{ $authorInfo }}</strong> {{ $description }} {{ $subjectInfo }}
+            <strong>{{ $authorInfo }}</strong> {{ $description }} {{ $subjectInfo }} at <i>{{ $created_at }}</i><br>
+            {!! $atributesInfo !!} {!! $oldInfo !!}
         </div>
     	{{ $items->links() }}
         @empty

@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Model\Role;
+use App\Traits\RedirectTraits;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
 class UserController extends Controller
 {
+    use RedirectTraits;
     public function __construct()
     {
        $this->middleware('can:user.view')->only('index');
@@ -24,6 +26,7 @@ class UserController extends Controller
     public function index()
     {
         $items = User::paginate(50);
+        $this->setUrl();
         return view('users.index', compact('items'));
     }
 
@@ -46,13 +49,20 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user = new User();
-        $user->name  = $request->name;
-        $user->email = $request->email;
-        $user->password  = Hash::make($request->password);
-        $user->save();
-        $user->roles()->attach($request->roles);
-        return redirect()->route('adusers.index');
+        $data = $request->only(['first_name', 'last_name', 'name', 'email']);
+        $data['password'] = Hash::make($request->password);
+        $user = User::create($data);
+        if (!is_null($user)) {
+            $user->roles()->attach($request->roles);
+            if ($request->save == 'save') {
+                $url = $this->getUrl(route('adusers.index'));
+                return redirect($url)->with('msg', 'Success!');
+            } else {
+                return redirect()->route('adusers.edit', $user->id)->with('msg', 'Success!');
+            }
+        } else {
+            return redirect()->route('adusers.create')->with('msg', 'Error!');
+        }
     }
 
     /**
@@ -89,12 +99,26 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
-        $user->name  = $request->name;
-        $user->email = $request->email;
-        if($request->has('password') ) $user->password  = Hash::make($request->password);
-        $user->save();
-        $user->roles()->sync($request->roles);
-        return redirect()->route('adusers.index');
+        $userData = $request->only(['first_name', 'last_name', 'name', 'email', 'avatar', 'active']);
+        if ($request->has('password')) $userData['password'] = Hash::make($request->password);
+        if ($user->update($userData)) {
+            // role
+            $user->roles()->sync($request->roles);
+            // profile
+            $profileData = $request->only('secondary_email', 'address', 'secondary_address', 'job', 'gender', 'about', 'facebook', 'google_plus', 'twitter', 'skype', 'website', 'country_code');
+            $arBirthday = explode('/', $request->birthday);
+            $profileData['birthday'] = Carbon::createFromDate($arBirthday[2], $arBirthday[1], $arBirthday[0]);
+            $profileData['phone_number'] = str_replace(' ', '', $request->phone_number);
+            $user->profile()->updateOrCreate(['user_id' => $id], $profileData);
+            if ($request->save == 'save') {
+                $url = $this->getUrl(route('adusers.index'));
+                return redirect($url)->with('msg', 'Success!');
+            } else {
+                return redirect()->route('adusers.edit', $id)->with('msg', 'Success!');
+            }
+        }
+        $url = $this->getUrl(route('adusers.index'));
+        return redirect($url);
     }
 
     /**
@@ -124,9 +148,11 @@ class UserController extends Controller
         $lastActivity = Activity::all()->last();
         return $lastActivity->subject;
     }
+
     public function allActivity()
     {
         $items = Activity::all()->latest();
         return view('users.activity', compact('items'));
     }
+
 }

@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\RoleRequest;
 use App\Model\Permission;
 use App\Model\Role;
+use App\Traits\RedirectTraits;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
+    use RedirectTraits;
     public function __construct()
     {
         //$this->middleware('can:user.index')->only('index');
@@ -21,6 +24,7 @@ class RoleController extends Controller
     public function index()
     {
         $items = Role::paginate(50);
+        $this->setUrl();
         return view('roles.index', compact('items'));
     }
 
@@ -41,15 +45,23 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
         $role = new Role();
-        $role->name         = $request->name;
+        $role->name = $request->name;
         $role->display_name = $request->display_name;
-        $role->description  = $request->description;
-        $role->save();
-        $role->permissions()->attach($request->permisions);
-        return redirect()->route('adroles.index');
+        $role->description = $request->description;
+        if ($role->save()) {
+            $role->permissions()->attach($request->permisions);
+            if ($request->save == 'save') {
+                $url = $this->getUrl(route('adroles.index'));
+                return redirect($url)->with('msg', 'Success!');
+            } else {
+                return redirect()->route('adroles.edit', $role->id);
+            }
+        } else {
+            return redirect()->route('adroles.create')->with('msg', 'Error!');
+        }
     }
 
     /**
@@ -71,7 +83,7 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        $item = Role::findOrFail($id); 
+        $item = Role::findOrFail($id);
         $permissions = Permission::all();
         return view('roles.edit', compact('item', 'permissions'));
     }
@@ -83,15 +95,23 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(RoleRequest $request, $id)
     {
         $role = Role::findOrFail($id); 
-        $role->name         = $request->name;
+        $role->name = $request->name;
         $role->display_name = $request->display_name;
-        $role->description  = $request->description;
-        $role->save();
-        $role->permissions()->sync($request->permision);
-        return redirect()->route('adroles.index');
+        $role->description = $request->description;
+        if ($role->save()) {
+            $role->permissions()->sync($request->permisions);
+            if ($request->save == 'save') {
+                $url = $this->getUrl(route('adroles.index'));
+                return redirect($url)->with('msg', 'Success!');
+            } else {
+                return redirect()->route('adroles.edit', $id);
+            }
+        } else {
+            return redirect()->route('adroles.create')->with('msg', 'Error!');
+        }
     }
 
     /**
@@ -102,8 +122,10 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        $role = Role::findOrFail($id); 
-        //$role->permissions()->detach($request->permision);
-        return redirect()->route('adroles.index');
+        $role = Role::findOrFail($id);
+        if ($role->delete()) {
+            $url = $this->getUrl(route('adroles.index'));
+            return redirect($url)->with('msg', 'Success!');
+        }
     }
 }

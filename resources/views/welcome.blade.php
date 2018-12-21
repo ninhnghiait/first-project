@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    Laravel <a href="{{ route('dsdsds') }}">dsdsds</a>
                 </div>
 
                 <div class="links">
