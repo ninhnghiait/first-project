@@ -33,41 +33,41 @@
                         @csrf
                         @method('PUT')
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label class="col-md-3 control-label" for="inputError">{{ __('permission.name') }}<span class="required">*</span></label>
+                            <label class="col-md-3 control-label" for="name">{{ __('permission.name') }}<span class="required">*</span></label>
                             <div class="col-md-6">
-                                <input type="text" name="name" class="form-control" maxlength="100" value="{{ old('name', $item->name) }}" required="">
+                                <input type="text" name="name" class="form-control" id="name" value="{{ old('name', $item->name) }}" required  required data-validation="length" data-validation-length="max100" >
                                 @if ($errors->has('name'))
                                 <label for="name" class="error">{{ $errors->first('name') }}</label>
                                 @endif
                             </div>
                         </div>
                         <div class="form-group{{ $errors->has('display_name') ? ' has-error' : '' }}">
-                            <label class="col-md-3 control-label" for="inputError">{{ __('permission.display_name') }}</label>
+                            <label class="col-md-3 control-label" for="display_name">{{ __('permission.display_name') }}</label>
                             <div class="col-md-6">
-                                <input type="text" name="display_name" class="form-control" id="inputError" maxlength="100" value="{{ old('display_name', $item->display_name) }}" >
+                                <input type="text" name="display_name" class="form-control" id="display_name" required data-validation="length" data-validation-length="max100" value="{{ old('display_name', $item->display_name) }}" >
                                 @if ($errors->has('display_name'))
                                 <label for="display_name" class="error">{{ $errors->first('display_name') }}</label>
                                 @endif
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label" for="inputError">{{ __('permission.permission') }}</label>
+                            <label class="col-md-3 control-label" for="">{{ __('permission.permission') }}</label>
                             <div class="col-md-6">
                                 @php
                                     $oldPermissions = old('permisions', $item->permissions()->pluck('id')->toArray());
                                 @endphp
                                 @foreach ($permissions as $p)
                                 <div class="checkbox-custom checkbox-default col-md-6">
-                                    <input name="permisions[]" type="checkbox" id="checkboxExample1" value="{{ $p->id }}" {{ in_array($p->id, $oldPermissions) ? 'checked' : '' }}>
-                                    <label for="checkboxExample1">{{ $p->display_name }}</label>
+                                    <input name="permisions[]" type="checkbox" id="permisions_{{ $p->id }}" value="{{ $p->id }}" {{ in_array($p->id, $oldPermissions) ? 'checked' : '' }}>
+                                    <label for="permisions_{{ $p->id }}">{{ $p->display_name }}</label>
                                 </div>
                                 @endforeach
                             </div>
                         </div>
                         <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
-                            <label class="col-md-3 control-label" for="inputError">{{ __('permission.description') }} </label>
+                            <label class="col-md-3 control-label" for="description">{{ __('permission.description') }} </label>
                             <div class="col-md-6">
-                                <textarea class="form-control" name="description" id="inputError" rows="3" maxlength="100">{{ old('description', $item->description) }}</textarea>
+                                <textarea class="form-control" name="description" id="description" rows="3" maxlength="100" data-validation="length" data-validation-length="max150">{{ old('description', $item->description) }}</textarea>
                                 @if ($errors->has('description'))
                                 <label for="description" class="error">{{ $errors->first('description') }}</label>
                                 @endif

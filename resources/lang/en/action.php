@@ -7,4 +7,6 @@ return [
     'back' => 'Back',
     'reset' => 'Reset',
     'create' => 'Create',
+    'success' => 'Success!',
+    'error' => 'Error!',
 ];

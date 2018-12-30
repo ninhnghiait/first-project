@@ -8,6 +8,11 @@
             <li><span>{{ __('header_title.edit_user') }}</span></li>
         @endslot
     @endcomponent
+
+    @if (session('alert'))
+        @component('components.admin.alert', ['type' => 'success', 'title' => session('alert')])
+        @endcomponent
+    @endif
     
     @php
         $id = $item->id;
@@ -26,7 +31,7 @@
             $secondaryEmail = $profile->secondary_email;
             $address = $profile->address;
             $secondaryAddress = $profile->secondary_address;
-            $birthday = $profile->birthday->format('d-m-Y');
+            $birthday = !is_null($profile->birthday) ? $profile->birthday->format('d-m-Y') : '';
             $gender = $profile->gender;
             $about = $profile->about;
             $facebook = $profile->facebook;

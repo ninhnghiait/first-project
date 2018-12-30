@@ -33,24 +33,24 @@
                         @csrf
                         @method('PUT')
                         <div class="form-group">
-                            <label class="col-md-3 control-label" for="inputError">{{ __('permission.name') }}</label>
+                            <label class="col-md-3 control-label" for="name">{{ __('permission.name') }}</label>
                             <div class="col-md-6">
-                                <input type="text" name="name" class="form-control" max="50" value="{{ $item->name }}" readonly>
+                                <input type="text" name="name" class="form-control" value="{{ $item->name }}" readonly>
                             </div>
                         </div>
                         <div class="form-group{{ $errors->has('display_name') ? ' has-error' : '' }}">
-                            <label class="col-md-3 control-label" for="inputError">{{ __('permission.display_name') }} <span class="required">*</span></label>
+                            <label class="col-md-3 control-label" for="display_name">{{ __('permission.display_name') }} <span class="required">*</span></label>
                             <div class="col-md-6">
-                                <input type="text" name="display_name" class="form-control" id="inputError" max="50" value="{{ old('display_name', $item->display_name) }}" >
+                                <input type="text" name="display_name" class="form-control" id="display_name" data-validation="length" data-validation-length="max100" value="{{ old('display_name', $item->display_name) }}" >
                                 @if ($errors->has('display_name'))
                                 <label for="display_name" class="error">{{ $errors->first('display_name') }}</label>
                                 @endif
                             </div>
                         </div>
                         <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
-                            <label class="col-md-3 control-label" for="inputError">{{ __('permission.description') }} </label>
+                            <label class="col-md-3 control-label" for="description">{{ __('permission.description') }} </label>
                             <div class="col-md-6">
-                                <textarea class="form-control" name="description" id="inputError" rows="3">{{ old('description', $item->description) }}</textarea>
+                                <textarea class="form-control" name="description" id="description" rows="3" data-validation="length" data-validation-length="max150">{{ old('description', $item->description) }}</textarea>
                                 @if ($errors->has('description'))
                                 <label for="description" class="error">{{ $errors->first('description') }}</label>
                                 @endif
@@ -75,15 +75,12 @@
     <!-- end: page -->
 </section>
 @endsection
-@section('footer')
+@section('footer') 
+<script src="{{ asset('admin/assets/jquery-form-validator/form-validator/jquery.form-validator.min.js') }}"></script>
 <script>
-    var a = true;
-    $('#filter-form').hide();
-    $('#active-filter-form').click(function() {
-        if(a) { $('#filter-form').show(); a = false;} else {$('#filter-form').hide(); a = true;};
-    });
-    $('#cancel-filter-form').click(function() {
-        $('#filter-form').hide(); a = true;
-    });
+  $.validate({
+    modules : 'html5',
+    lang : '{{ session('locale') }}'
+  });
 </script>
 @endsection

@@ -9,8 +9,12 @@
         @endslot
     @endcomponent
     
+    @if (session('alert'))
+        @component('components.admin.alert', ['type' => 'success', 'title' => session('alert')])
+        @endcomponent
+    @endif
     <!-- start: filter -->
-    <div class="row appear-animation bounceInUp" data-appear-animation="bounceInUp" id="filter-form">
+    <div class="row appear-animation fadeInDown" data-appear-animation="fadeInDown" id="filter-form">
         <div class="col-lg-12">
             <section class="panel">
                 <div class="panel-body">
@@ -44,7 +48,7 @@
         </div>
     </div>
     <!-- start: page -->
-    <div class="row">
+    <div class="row appear-animation fadeInUp" data-appear-animation="fadeInUp">
         <div class="col-md-12">
             <section class="panel">
                 <header class="panel-heading">
@@ -86,7 +90,7 @@
                                     <td>{{ $email }}</td>
                                     <td class="actions-hover actions-fade">
                                         <a href="{{ route('adusers.edit', $id) }}"><i class="fa fa-pencil"></i></a>
-                                        <a href="javascript:;" class="delete-row" onclick="$(this).next().submit()"><i class="fa fa-trash-o"></i></a>
+                                        <a href="javascript:;" class="delete-row del-record" ><i class="fa fa-trash-o"></i></a>
                                         <form action="{{ route('adusers.destroy', $id) }}" style="display: none" method="post">
                                             @csrf
                                             @method('delete')
@@ -114,6 +118,9 @@
 @endsection
 @section('footer')
 <script>
+    $('.del-record').click(function() {
+        if (confirm('Are you sure?')) $(this).next().submit();
+    });
     var a = true;
     $('#filter-form').hide();
     $('#active-filter-form').click(function() {

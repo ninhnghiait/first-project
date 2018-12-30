@@ -6,6 +6,8 @@ return [
     'username' => 'Username',
     'fullname' => 'Fullname',
     'password' => 'Password',
+    'old_password' => 'Current Password',
+    'new_password' => 'New Password',
     'role' => 'Role',
     'secondary_email' => 'Secondary Email',
     'address' => 'Address',
@@ -19,5 +21,7 @@ return [
     'password_confirmation' => 'Password Confirmation',
     'avatar' => 'Avatar',
     'active' => 'Active',
-    'upload_picture' => 'Upload Picture'
+    'upload_picture' => 'Upload Picture',
+    'name_valid' => 'The Username does not contain spaces or special characters',
+    'current_pass_valid' => 'The current password is incorrect.',
 ];

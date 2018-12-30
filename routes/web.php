@@ -24,6 +24,12 @@ Route::group(['middleware' => 'localization', 'prefix' => Session::get('locale')
 		Route::get('aduser-activitied', 'UserActivityController@index')->name('aduser-activitied.index');
 
 		Route::resource('adusers', 'UserController');
+		
+		Route::prefix('adprofiles')->as('adprofiles.')->group(function() {
+			Route::get('index', 'ProfileController@index')->name('index');
+			Route::post('update', 'ProfileController@update')->name('update');
+			Route::post('reset-password', 'ProfileController@resetPassword')->name('resetPassword');
+		});
 
 		Route::resource('adroles', 'RoleController');
 

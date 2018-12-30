@@ -7,4 +7,6 @@ return [
     'back' => 'Quay lại',
     'reset' => 'Reset',
     'create' => 'Thêm',
+    'success' => 'Thành công!',
+    'error' => 'Lỗi!',
 ];

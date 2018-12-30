@@ -11,4 +11,8 @@ return [
     'role_management' => 'Quản trị nhóm',
     'create_role' => 'Tạo nhóm',
     'edit_role' => 'Cập nhật nhóm',
+
+    'my_profile' => 'Thông tin cá nhân',
+
+
 ];

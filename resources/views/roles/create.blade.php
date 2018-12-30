@@ -1,9 +1,4 @@
 @extends('layouts.master')
-@section('header')
-<style>
-    .mb-5 {margin-bottom: 5px;}
-</style>
-@endsection
 @section('main')    
 <section role="main" class="content-body">
     @component('components.admin.header-main', ['title' => __('header_title.create_role')])
@@ -29,44 +24,44 @@
         <div class="col-lg-9">
             <section class="panel">
                 <div class="panel-body">
-                    <form action="{{ route('adroles.store') }}" class="form-horizontal form-bordered" method="POST" id="form">
+                    <form action="{{ route('adroles.store') }}" class="form-horizontal form-bordered" method="POST" id="form" novalidate>
                         @csrf
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label class="col-md-3 control-label" for="inputError">{{ __('permission.name') }}<span class="required">*</span></label>
-                            <div class="col-md-6">
-                                <input type="text" name="name" class="form-control" maxlength="100" value="{{ old('name') }}" required="">
+                            <label class="col-md-3 control-label" for="name">{{ __('permission.name') }}<span class="required">*</span></label>
+                            <div class="col-md-9">
+                                <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required data-validation="length" data-validation-length="max100">
                                 @if ($errors->has('name'))
                                 <label for="name" class="error">{{ $errors->first('name') }}</label>
                                 @endif
                             </div>
                         </div>
                         <div class="form-group{{ $errors->has('display_name') ? ' has-error' : '' }}">
-                            <label class="col-md-3 control-label" for="inputError">{{ __('permission.display_name') }}</label>
-                            <div class="col-md-6">
-                                <input type="text" name="display_name" class="form-control" id="inputError" maxlength="100" value="{{ old('display_name') }}" >
+                            <label class="col-md-3 control-label" for="display_name">{{ __('permission.display_name') }}</label>
+                            <div class="col-md-9">
+                                <input type="text" name="display_name" id="display_name" class="form-control" data-validation="length" data-validation-length="max100" value="{{ old('display_name') }}" >
                                 @if ($errors->has('display_name'))
                                 <label for="display_name" class="error">{{ $errors->first('display_name') }}</label>
                                 @endif
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3 control-label" for="inputError">{{ __('permission.permission') }}</label>
-                            <div class="col-md-6">
+                            <label class="col-md-3 control-label" for="permisions">{{ __('permission.permission') }}</label>
+                            <div class="col-md-9">
                                 @php
                                     $oldPermissions = old('permisions', []);
                                 @endphp
                                 @foreach ($permissions as $p)
                                 <div class="checkbox-custom checkbox-default col-md-6">
-                                    <input name="permisions[]" type="checkbox" value="{{ $p->id }}" {{ in_array($p->id, $oldPermissions) ? 'checked' : '' }}>
-                                    <label for="">{{ $p->display_name }}</label>
+                                    <input name="permisions[]" type="checkbox" id="permisions_{{ $p->id }}" value="{{ $p->id }}" {{ in_array($p->id, $oldPermissions) ? 'checked' : '' }}>
+                                    <label for="permisions_{{ $p->id }}">{{ $p->display_name }}</label>
                                 </div>
                                 @endforeach
                             </div>
                         </div>
                         <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
-                            <label class="col-md-3 control-label" for="inputError">{{ __('permission.description') }} </label>
-                            <div class="col-md-6">
-                                <textarea class="form-control" name="description" id="inputError" rows="3" maxlength="100">{{ old('description') }}</textarea>
+                            <label class="col-md-3 control-label" for="description">{{ __('permission.description') }} </label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" name="description" id="description" rows="3" data-validation="length" data-validation-length="max150">{{ old('description') }}</textarea>
                                 @if ($errors->has('description'))
                                 <label for="description" class="error">{{ $errors->first('description') }}</label>
                                 @endif
@@ -90,15 +85,12 @@
     <!-- end: page -->
 </section>
 @endsection
-@section('footer')
+@section('footer') 
+<script src="{{ asset('admin/assets/jquery-form-validator/form-validator/jquery.form-validator.min.js') }}"></script>
 <script>
-    var a = true;
-    $('#filter-form').hide();
-    $('#active-filter-form').click(function() {
-        if(a) { $('#filter-form').show(); a = false;} else {$('#filter-form').hide(); a = true;};
-    });
-    $('#cancel-filter-form').click(function() {
-        $('#filter-form').hide(); a = true;
-    });
+  $.validate({
+    modules : 'html5',
+    lang : '{{ session('locale') }}'
+  });
 </script>
 @endsection

@@ -8,6 +8,11 @@
             <li><span>{{ __('header_title.create_new_user') }}</span></li>
         @endslot
     @endcomponent
+
+    @if (session('alert'))
+        @component('components.admin.alert', ['type' => 'success', 'title' => session('alert')])
+        @endcomponent
+    @endif
     
     <!-- start: page -->
     <div class="row">
@@ -40,10 +45,12 @@
                         <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
                             <label class="col-md-3 control-label" for="name">{{ __('user.username') }} <span class="required">*</span></label>
                             <div class="col-md-6">
-                                <input type="text" name="name" class="form-control" id="name" max="50" value="{{ old('username') }}" required
-                                    data-validation="length" data-validation-length="5-100" >
-                                @if ($errors->has('username'))
-                                <label for="name" class="error">{{ $errors->first('username') }}</label>
+                                <input type="text" name="name" class="form-control" id="name" max="50" value="{{ old('name') }}" required
+                                    data-validation="length" data-validation-length="5-100"
+                                    pattern="^[a-zA-Z0-9]+$"
+                                    data-validation-error-msg-custom="{{ __('user.name_valid') }}" >
+                                @if ($errors->has('name'))
+                                <label for="name" class="error">{{ $errors->first('name') }}</label>
                                 @endif
                             </div>
                         </div>
@@ -56,6 +63,12 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="password_confirmation">{{ __('user.password_confirmation') }}<span class="required">*</span></label>
+                            <div class="col-md-6">
+                                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control">
+                            </div>
+                        </div>
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                             <label class="col-md-3 control-label" for="email">Email <span class="required">*</span></label>
                             <div class="col-md-6">
@@ -66,9 +79,9 @@
                             </div>
                         </div>
                         <div class="form-group{{ $errors->has('roles') ? ' has-error' : '' }}">
-                            <label class="col-md-3 control-label" for="roles">{{ __('user.role') }} <span class="required">*</span></label>
+                            <label class="col-md-3 control-label" for="roles">{{ __('user.role') }}</label>
                             <div class="col-md-6">
-                                <select name="roles[]" class="form-control" required multiple size="{{ $roles->count() }}">
+                                <select name="roles[]" class="form-control" multiple size="{{ $roles->count() }}">
                                     @foreach ($roles as $r)
                                     <option value="{{ $r->id }}">{{ $r->display_name }}</option>
                                     @endforeach

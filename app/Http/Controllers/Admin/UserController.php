@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\UserRequest;
 use App\Model\Role;
 use App\Traits\RedirectTraits;
 use App\User;
@@ -15,8 +16,8 @@ class UserController extends Controller
     use RedirectTraits;
     public function __construct()
     {
-       $this->middleware('can:user.view')->only('index');
-       $this->middleware('can:user.update')->only(['edit', 'update']);
+       //$this->middleware('can:user.view')->only('index');
+       //$this->middleware('can:user.update')->only(['edit', 'update']);
     }
     /**
      * Display a listing of the resource.
@@ -47,7 +48,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
         $data = $request->only(['first_name', 'last_name', 'name', 'email']);
         $data['password'] = Hash::make($request->password);
@@ -56,12 +57,12 @@ class UserController extends Controller
             $user->roles()->attach($request->roles);
             if ($request->save == 'save') {
                 $url = $this->getUrl(route('adusers.index'));
-                return redirect($url)->with('msg', 'Success!');
+                return redirect($url)->with('msg', __('action.success'));
             } else {
-                return redirect()->route('adusers.edit', $user->id)->with('msg', 'Success!');
+                return redirect()->route('adusers.edit', $user->id)->with('alert', __('action.success'));
             }
         } else {
-            return redirect()->route('adusers.create')->with('msg', 'Error!');
+            return redirect()->route('adusers.create')->with('alert', __('action.error'));
         }
     }
 
@@ -96,25 +97,27 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
         $user = User::findOrFail($id);
         $userData = $request->only(['first_name', 'last_name', 'name', 'email', 'avatar', 'active']);
-        if ($request->has('password')) $userData['password'] = Hash::make($request->password);
+        if (!is_null($request->password)) $userData['password'] = Hash::make($request->password);
         if ($user->update($userData)) {
             // role
             $user->roles()->sync($request->roles);
             // profile
             $profileData = $request->only('secondary_email', 'address', 'secondary_address', 'job', 'gender', 'about', 'facebook', 'google_plus', 'twitter', 'skype', 'website', 'country_code');
-            $arBirthday = explode('/', $request->birthday);
-            $profileData['birthday'] = Carbon::createFromDate($arBirthday[2], $arBirthday[1], $arBirthday[0]);
+            if (!is_null($request->birthday)) {
+                $arBirthday = explode('/', $request->birthday);
+                $profileData['birthday'] = Carbon::createFromDate($arBirthday[2], $arBirthday[1], $arBirthday[0]);
+            }
             $profileData['phone_number'] = str_replace(' ', '', $request->phone_number);
             $user->profile()->updateOrCreate(['user_id' => $id], $profileData);
             if ($request->save == 'save') {
                 $url = $this->getUrl(route('adusers.index'));
-                return redirect($url)->with('msg', 'Success!');
+                return redirect($url)->with('alert', __('action.success'));
             } else {
-                return redirect()->route('adusers.edit', $id)->with('msg', 'Success!');
+                return redirect()->route('adusers.edit', $id)->with('alert', __('action.success'));
             }
         }
         $url = $this->getUrl(route('adusers.index'));
@@ -130,8 +133,9 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-        $user->delete();
-        return redirect()->route('adroles.index');
+        $msg = $user->delete() ? __('action.success') : __('action.error');
+        $url = $this->getUrl(route('adusers.index'));
+        return redirect($url)->with('alert', $msg);
     }
 
     /**

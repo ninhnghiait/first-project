@@ -11,4 +11,6 @@ return [
     'role_management' => 'Role management',
     'create_role' => 'Create role',
     'edit_role' => 'Edit role',
+
+    'my_profile' => 'My Profile',
 ];
