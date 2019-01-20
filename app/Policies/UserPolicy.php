@@ -102,4 +102,12 @@ class UserPolicy
     {
         return $user->hasAccess(['user.active']);
     }
+
+    /**
+     * Determine whether the user is superadmintrator.
+     */
+    public function superadmintrator(User $user)
+    {
+        return $user->inRole('superadministrator');
+    }
 }

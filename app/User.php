@@ -33,7 +33,7 @@ class User extends Authenticatable
 
     public function getFullNameAttribute()
     {   
-        return $this->first_name.' '.$this->last_name;
+        return ($this->first_name != null || $this->last_name != null) ?  ($this->first_name.' '.$this->last_name) : $this->name;
     }
     public function getAvatarUserAttribute()
     {

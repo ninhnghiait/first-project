@@ -5,19 +5,24 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserRequest;
 use App\Model\Role;
+use App\Repositories\UserRepository;
 use App\Traits\RedirectTraits;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 class UserController extends Controller
 {
     use RedirectTraits;
-    public function __construct()
+    public function __construct(UserRepository $userRespository)
     {
-       //$this->middleware('can:user.view')->only('index');
-       //$this->middleware('can:user.update')->only(['edit', 'update']);
+       $this->middleware('can:user.view')->only('index');
+       $this->middleware('can:user.create')->only(['create', 'store']);
+       $this->middleware('can:user.update')->only(['edit', 'update']);
+       $this->middleware('can:user.delete')->only('destroy');
+       $this->userRespository = $userRespository;
     }
     /**
      * Display a listing of the resource.
@@ -26,7 +31,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $items = User::paginate(50);
+        $items = $this->userRespository->paginate($limit = 1, $columns = ['*']); dd($items);
+        $items = User::paginate(50, ['*']);
         $this->setUrl();
         return view('users.index', compact('items'));
     }

@@ -14,7 +14,7 @@ class RoleController extends Controller
     use RedirectTraits;
     public function __construct()
     {
-        //$this->middleware('can:user.index')->only('index');
+        $this->middleware('can:user.superadmintrator');
     }
     /**
      * Display a listing of the resource.

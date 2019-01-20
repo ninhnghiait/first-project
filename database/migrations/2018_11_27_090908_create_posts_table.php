@@ -25,6 +25,8 @@ class CreatePostsTable extends Migration
 
             $table->foreign('user_id')->references('id')->on('users');
         });
+
+        DB::statement('ALTER TABLE full_text_searches ADD FULLTEXT `search_ft` (`title`)');
     }
 
     /**

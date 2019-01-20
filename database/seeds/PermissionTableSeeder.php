@@ -38,47 +38,58 @@ class PermissionTableSeeder extends Seeder
             'description' => 'Kích hoạt hay hạn chế tài khoản'
         ]);
 
-        $view_profile = Permission::create([
-            'name' => 'profile.view', 
-            'display_name' => 'Xem profile',
-            'description' => 'Xem tài khoản của mình'
-        ]);
-        $create_profile = Permission::create([
-            'name' => 'profile.create', 
-            'display_name' => 'Tạo profile',
-            'description' => 'Xem tài khoản của mình'
-        ]);
-        $update_profile = Permission::create([
-            'name' => 'profile.update', 
-            'display_name' => 'Cập nhật profile',
-            'description' => 'Cập nhật tài khoản của mình'
-        ]);
-        $delete_profile = Permission::create([
-            'name' => 'profile.delete', 
-            'display_name' => 'Xóa profile',
-            'description' => 'Xóa tài khoản của mình'
-        ]);
+        // $view_profile = Permission::create([
+        //     'name' => 'profile.view', 
+        //     'display_name' => 'Xem profile',
+        //     'description' => 'Xem tài khoản của mình'
+        // ]);
+        // $create_profile = Permission::create([
+        //     'name' => 'profile.create', 
+        //     'display_name' => 'Tạo profile',
+        //     'description' => 'Xem tài khoản của mình'
+        // ]);
+        // $update_profile = Permission::create([
+        //     'name' => 'profile.update', 
+        //     'display_name' => 'Cập nhật profile',
+        //     'description' => 'Cập nhật tài khoản của mình'
+        // ]);
+        // $delete_profile = Permission::create([
+        //     'name' => 'profile.delete', 
+        //     'display_name' => 'Xóa profile',
+        //     'description' => 'Xóa tài khoản của mình'
+        // ]);
 
-        $view_role = Permission::create([
-            'name' => 'role.view', 
-            'display_name' => 'Xem role',
-            'description' => 'Xem role'
-        ]);
-        $create_role = Permission::create([
-            'name' => 'role.create', 
-            'display_name' => 'Tạo mới role',
-            'description' => 'Tạo mới role'
-        ]);
-        $update_role = Permission::create([
-            'name' => 'role.update', 
-            'display_name' => 'Tạo mới role',
-            'description' => 'Tạo mới role'
-        ]);
-        $delete_role = Permission::create([
-            'name' => 'role.delete', 
-            'display_name' => 'Xóa role',
-            'description' => 'Xóa role'
-        ]);
+        // $view_role = Permission::create([
+        //     'name' => 'role.view', 
+        //     'display_name' => 'Xem role',
+        //     'description' => 'Xem role'
+        // ]);
+        // $create_role = Permission::create([
+        //     'name' => 'role.create', 
+        //     'display_name' => 'Tạo mới role',
+        //     'description' => 'Tạo mới role'
+        // ]);
+        // $update_role = Permission::create([
+        //     'name' => 'role.update', 
+        //     'display_name' => 'Cập nhật role',
+        //     'description' => 'Cập nhật role'
+        // ]);
+        // $delete_role = Permission::create([
+        //     'name' => 'role.delete', 
+        //     'display_name' => 'Xóa role',
+        //     'description' => 'Xóa role'
+        // ]);
+
+        // $update_permission = Permission::create([
+        //     'name' => 'permission.update', 
+        //     'display_name' => 'Cập nhật quyền hạn',
+        //     'description' => 'Cập nhật quyền hạn'
+        // ]);
+        // $view_permission = Permission::create([
+        //     'name' => 'permission.view', 
+        //     'display_name' => 'Xem quyền hạn',
+        //     'description' => 'Xem quyền hạn'
+        // ]);
 
         $view_post = Permission::create([
             'name' => 'post.view', 

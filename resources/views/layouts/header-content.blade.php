@@ -201,12 +201,15 @@
 
         <div id="userbox" class="userbox">
             <a href="#" data-toggle="dropdown">
+                @php
+                    $userInfo = Auth::user(); 
+                @endphp
                 <figure class="profile-picture">
-                    <img src="{{ asset('admin/assets/images/!logged-user.jpg') }}" alt="Joseph Doe" class="img-circle" data-lock-picture="{{ asset('admin/assets/images/!logged-user.jpg') }}" />
+                    <img src="{{ $userInfo->avatar_user }}" alt="{{ $userInfo->full_name }}" class="img-circle" data-lock-picture="{{ $userInfo->avatar_user }}" />
                 </figure>
-                <div class="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@JSOFT.com">
-                    <span class="name">John Doe Junior</span>
-                    <span class="role">administrator</span>
+                <div class="profile-info" data-lock-name="{{ $userInfo->full_name }}" data-lock-email="{{ $userInfo->email }}">
+                    <span class="name">{{ $userInfo->full_name }}</span>
+                    <span class="role">{{ implode(',', $userInfo->roles()->pluck('name')->toArray()) }}</span>
                 </div>
 
                 <i class="fa custom-caret"></i>

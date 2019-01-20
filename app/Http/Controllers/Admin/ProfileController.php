@@ -43,8 +43,6 @@ class ProfileController extends Controller
         $userData = $request->only(['first_name', 'last_name', 'email', 'avatar', 'active']);
         
         if ($user->update($userData)) {
-            // role
-            $user->roles()->sync($request->roles);
             // profile
             $profileData = $request->only('secondary_email', 'address', 'secondary_address', 'job', 'gender', 'about', 'facebook', 'google_plus', 'twitter', 'skype', 'website', 'country_code');
             if (!is_null($request->birthday)) {

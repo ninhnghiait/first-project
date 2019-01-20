@@ -14,7 +14,7 @@ class PermissionController extends Controller
 
     public function __construct()
     {
-        //$this->middleware('can:user.index')->only('index');
+        $this->middleware('can:user.superadmintrator');
     }
     /**
      * Display a listing of the resource.
@@ -35,7 +35,6 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        return view('permissions.create');
     }
 
     /**

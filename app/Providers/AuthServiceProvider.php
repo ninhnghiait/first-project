@@ -28,6 +28,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+        Gate::define('user.superadmintrator', UserPolicy::class . '@superadmintrator');
         Gate::resource('user', UserPolicy::class);
         Gate::define('user.active', UserPolicy::class . '@active');
         Gate::resource('post', PostPolicy::class);

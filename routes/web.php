@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-
+Route::resource('/posts', 'PostsController');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['middleware' => 'localization', 'prefix' => Session::get('locale')], function() {
 	Route::namespace('Admin')->prefix('admin')->middleware('auth')->group(function() {
@@ -24,7 +24,9 @@ Route::group(['middleware' => 'localization', 'prefix' => Session::get('locale')
 		Route::get('aduser-activitied', 'UserActivityController@index')->name('aduser-activitied.index');
 
 		Route::resource('adusers', 'UserController');
-		
+		// LARAVEL LOG
+		Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+
 		Route::prefix('adprofiles')->as('adprofiles.')->group(function() {
 			Route::get('index', 'ProfileController@index')->name('index');
 			Route::post('update', 'ProfileController@update')->name('update');
@@ -48,6 +50,8 @@ Route::group(['middleware' => 'localization', 'prefix' => Session::get('locale')
 		Route::get('adcontacts/create', 'ContactController@create')->name('adcontacts.create');
 		Route::post('adcontacts/store', 'ContactController@store')->name('adcontacts.store');
 		Route::delete('adcontacts/{id}/destroy', 'ContactController@destroy')->name('adcontacts.destroy');
+
+
 
 	});
 });

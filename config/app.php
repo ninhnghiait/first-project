@@ -174,6 +174,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Spatie\Activitylog\ActivitylogServiceProvider::class,
         Unisharp\Laravelfilemanager\LaravelFilemanagerServiceProvider::class,
+        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
     ],
 
     /*
